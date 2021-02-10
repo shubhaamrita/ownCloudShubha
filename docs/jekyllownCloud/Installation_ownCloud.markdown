@@ -1,6 +1,6 @@
 ---
 layout: page
 title: "Installation - Admin"
-permalink: /installation
+permalink: /installation/
 ---
 TEST
