@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Manual Installation | Quick Start Guide</title>
+<meta name="generator" content="Jekyll v4.2.0" />
+<meta property="og:title" content="Manual Installation" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="A Quick Guide site for Admins and Users" />
+<meta property="og:description" content="A Quick Guide site for Admins and Users" />
+<link rel="canonical" href="/installation/" />
+<meta property="og:url" content="/installation/" />
+<meta property="og:site_name" content="Quick Start Guide" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Manual Installation" />
+<script type="application/ld+json">
+{"@type":"WebPage","description":"A Quick Guide site for Admins and Users","url":"/installation/","headline":"Manual Installation","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Quick Start Guide" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Quick Start Guide</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/usercreation/">Create User</a><a class="page-link" href="/desktopclient/">Desktop Client</a><a class="page-link" href="/installationdocker/">Installation with Docker (port 8080)</a><a class="page-link" href="/installation/">Manual Installation</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Manual Installation</h1>
+  </header>
+
+  <div class="post-content">
+    <h2 id="overview">Overview</h2>
+<hr />
+<p>This guide will walk you through the installation and configuration of ownCloud in both environments:</p>
+<ul>
+  <li>Ubuntu 18.04</li>
+  <li>Ubuntu 20.04</li>
+</ul>
+
+<h2 id="pre-requisites">Pre-requisites</h2>
+<hr />
+<ul>
+  <li>A fresh installation of <strong>Ubuntu 18.04/20.04</strong> with SSH enabled</li>
+  <li>Connected as the root user</li>
+  <li>ownCloud directory is located in <code class="language-plaintext highlighter-rouge">/var/www/owncloud/</code></li>
+</ul>
+
+<h2 id="preparation">Preparation</h2>
+<hr />
+<p>Run the below command to:</p>
+<ul>
+  <li>Ensure that all the installed packages are entirely up to date</li>
+  <li>PHP is available in the APT repository</li>
+</ul>
+
+<p><code class="language-plaintext highlighter-rouge">apt update &amp;&amp; \ apt upgrade -y</code></p>
+
+<h3 id="create-the-occ-helper-script">Create the occ Helper Script</h3>
+<ul>
+  <li>Create a helper script to simplify running occ commands
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>FILE="/usr/local/bin/occ"
+/bin/cat &lt;&lt;EOM &gt;$FILE
+#! /bin/bash
+cd /var/www/owncloud
+sudo -u www-data /usr/bin/php /var/www/owncloud/occ "\$@"
+EOM
+</code></pre></div>    </div>
+  </li>
+  <li>Make the helper script executable
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>chmod +x /usr/local/bin/occ
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h3 id="install-the-required-packages">Install the Required Packages</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>apt install -y \
+  apache2 \
+  libapache2-mod-php \
+  mariadb-server \
+  openssl \
+  php-imagick php-common php-curl \
+  php-gd php-imap php-intl \
+  php-json php-mbstring php-mysql \
+  php-ssh2 php-xml php-zip \
+  php-apcu php-redis redis-server \
+  wget
+</code></pre></div></div>
+
+<h3 id="install-the-recommended-packages">Install the Recommended Packages</h3>
+<h4 id="ubuntu-1804">Ubuntu 18.04</h4>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  apt install -y \
+  ssh bzip2 sudo cron rsync curl jq \
+  inetutils-ping smbclient php-libsmbclient \
+  php-smbclient coreutils php-ldap
+</code></pre></div></div>
+
+<h4 id="ubuntu-2004">Ubuntu 20.04</h4>
+<ul>
+  <li>Add ondrej’s ppa
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo add-apt-repository ppa:ondrej/php
+sudo apt-get update
+echo "deb http://ppa.launchpad.net/ondrej/php/ubuntu $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/php.list
+</code></pre></div>    </div>
+  </li>
+  <li>Add the key
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>apt-key adv --recv-keys --keyserver hkps://keyserver.ubuntu.com:443 4F4EA0AAE5267A6C
+</code></pre></div>    </div>
+  </li>
+  <li>Install the recommended packages
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>apt install -y \
+ssh bzip2 rsync curl jq \
+inetutils-ping smbclient\
+php-smbclient coreutils php-ldap
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h2 id="installation">Installation</h2>
+<hr />
+<h3 id="configure-apache">Configure Apache</h3>
+<ul>
+  <li>Change the Document Root
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sed</span> <span class="nt">-i</span> <span class="s2">"s#html#owncloud#"</span> /etc/apache2/sites-available/000-default.conf
+service apache2 restart
+</code></pre></div>    </div>
+  </li>
+  <li>Create a Virtual Host Configuration</li>
+</ul>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>FILE="/etc/apache2/sites-available/owncloud.conf"
+/bin/cat &lt;&lt;EOM &gt;$FILE
+Alias /owncloud "/var/www/owncloud/"
+&lt;Directory /var/www/owncloud/&gt;
+  Options +FollowSymlinks
+  AllowOverride All
+ &lt;IfModule mod_dav.c&gt;
+  Dav off
+ &lt;/IfModule&gt;
+ SetEnv HOME /var/www/owncloud
+ SetEnv HTTP_HOME /var/www/owncloud
+&lt;/Directory&gt;
+EOM
+</code></pre></div></div>
+<ul>
+  <li>Enable the Virtual Host Configuration
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>a2ensite owncloud.conf
+service apache2 reload
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h3 id="configure-the-database">Configure the Database</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>service mysql start
+mysql -u root -e "CREATE DATABASE IF NOT EXISTS owncloud; \
+GRANT ALL PRIVILEGES ON owncloud.* \
+  TO owncloud@localhost \
+  IDENTIFIED BY 'password'";
+</code></pre></div></div>
+
+<ul>
+  <li>Enable the Recommended Apache Modules
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>echo "Enabling Apache Modules"
+a2enmod dir env headers mime rewrite setenvif
+service apache2 reload
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h3 id="download-owncloud">Download ownCloud</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cd /var/www/
+wget https://download.owncloud.org/community/owncloud-10.6.0.tar.bz2 &amp;&amp; \
+tar -xjf owncloud-10.6.0.tar.bz2 &amp;&amp; \
+chown -R www-data. owncloud
+</code></pre></div></div>
+
+<h3 id="install-owncloud">Install ownCloud</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>occ maintenance:install \
+    --database "mysql" \
+    --database-name "owncloud" \
+    --database-user "owncloud" \
+    --database-pass "password" \
+    --admin-user "admin" \
+    --admin-pass "admin"
+</code></pre></div></div>
+<h3 id="configure-ownclouds-trusted-domains">Configure ownCloud’s Trusted Domains</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>myip=$(hostname -I|cut -f1 -d ' ')
+occ config:system:set trusted_domains 1 --value="$myip"
+</code></pre></div></div>
+<h3 id="set-up-a-cron-job">Set Up a Cron Job</h3>
+<ul>
+  <li>Set your background job mode to cron
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>occ background:cron
+echo "*/15  *  *  *  * /var/www/owncloud/occ system:cron" \
+&gt; /var/spool/cron/crontabs/www-data
+chown www-data.crontab /var/spool/cron/crontabs/www-data
+chmod 0600 /var/spool/cron/crontabs/www-data
+</code></pre></div>    </div>
+    <p>If you need to sync your users from an LDAP or Active Directory Server, add this additional <a href="https://doc.owncloud.com/server/10.6/admin_manual/configuration/server/background_jobs_configuration.html">Cron job</a>. Every 15 minutes this cron job will sync LDAP users in ownCloud and disable the ones who are not available for ownCloud. Additionally, you get a log file in <code class="language-plaintext highlighter-rouge">/var/log/ldap-sync/user-sync.log</code> for debugging.</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>echo "*/15 * * * * /var/www/owncloud/occ user:sync 'OCA\User_LDAP\User_Proxy' -m disable -vvv &gt;&gt; /var/log/ldap-sync/user-sync.log 2&gt;&amp;1" &gt; /var/spool/cron/crontabs/www-data
+chown www-data.crontab  /var/spool/cron/crontabs/www-data
+chmod 0600  /var/spool/cron/crontabs/www-data
+mkdir -p /var/log/ldap-sync
+touch /var/log/ldap-sync/user-sync.log
+chown www-data. /var/log/ldap-sync/user-sync.log
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h3 id="configure-caching-and-file-locking">Configure Caching and File Locking</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>occ config:system:set \
+   memcache.local \
+   --value '\OC\Memcache\APCu'
+
+occ config:system:set \
+   memcache.locking \
+   --value '\OC\Memcache\Redis'
+
+service redis-server start
+
+occ config:system:set \
+   redis \
+   --value '{"host": "127.0.0.1", "port": "6379"}' \
+   --type json
+</code></pre></div></div>
+<h3 id="configure-log-rotation">Configure Log Rotation</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>FILE="/etc/logrotate.d/owncloud"
+sudo /bin/cat &lt;&lt;EOM &gt;$FILE
+/var/www/owncloud/data/owncloud.log {
+  size 10M
+  rotate 12
+  copytruncate
+  missingok
+  compress
+  compresscmd /bin/gzip
+}
+EOM
+</code></pre></div></div>
+<h2 id="finalise-the-installation">Finalise the Installation</h2>
+<hr />
+<p>Make sure the permissions are correct</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cd /var/www/
+chown -R www-data. owncloud
+</code></pre></div></div>
+
+<p><strong>ownCloud is now installed. You can confirm that it is ready to use by pointing your web browser to your ownCloud installation</strong></p>
+
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Quick Start Guide</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Quick Start Guide</li><li><a class="u-email" href="mailto:shubhaamrita@gmail.com">shubhaamrita@gmail.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>A Quick Guide site for Admins and Users</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
