@@ -1,7 +1,7 @@
 ---
 layout: page
 title: "Manual Installation"
-permalink: /installation/
+permalink: /ownCloudShubha.github.io/installation/
 ---
 
 ## Overview
