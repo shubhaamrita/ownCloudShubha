@@ -7,4 +7,8 @@ categories: jekyll update
 ---
 [Connect using Desktop Client](/ownCloudShubha.github.io/desktopclient/)
 
+Refer to this guide for instructions on how to connect to ownCloud server using Desktop Client
+
 [Connect using Mobile Client (Android/iOS)](/ownCloudShubha.github.io/mobileclient/)
+
+Refer to this guide for instructions on how to connect to ownCloud server using Mobile Client. This includes both **Android** and **iOS** devices.
