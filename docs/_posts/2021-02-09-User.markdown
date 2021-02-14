@@ -2,6 +2,7 @@
 layout: post
 title:  "User"
 date:   2021-02-09 23:23:12 +0530
+description: "This sections covers instructions for a User to connect to ownCloud server using Desktop or Mobile Client"
 categories: jekyll update
 ---
 [Connect using Desktop Client](/ownCloudShubha.github.io/desktopclient/)
