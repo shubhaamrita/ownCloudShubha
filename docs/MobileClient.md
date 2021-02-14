@@ -24,7 +24,6 @@ This guide will help you understand how to install mobile and connect to your ow
 3. Click the Connect button.
 If your server has a self-signed SSL certificate, you’ll get a warning that it is not to be trusted
 4. Click the YES button to accept the certificate and complete your account setup
-
 ![N|Solid](https://doc.owncloud.com/android/_images/android-3.png)
 
 
