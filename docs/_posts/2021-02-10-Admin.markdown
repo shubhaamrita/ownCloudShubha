@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "Admin"
+description: "This will navigate your to the instructions on how to manually install ownCloud server, enable port 8080 for users and create a user account"
 date: 2021-02-10 12:14:00 -0000
 categories: RedHat Admin
 ---
