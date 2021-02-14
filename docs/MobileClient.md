@@ -21,9 +21,9 @@ This guide will help you understand how to install mobile and connect to your ow
 ## Connect to ownCloud
 1. Run ownCloud app
 2. Enter server URL, login name, password
-3. Click the Connect button. 
-
+3. Click the Connect button.
 If your server has a self-signed SSL certificate, you’ll get a warning that it is not to be trusted
+
 ![N|Solid](https://doc.owncloud.com/android/_images/android-3.png)
 
 4. Click the YES button to accept the certificate and complete your account setup
